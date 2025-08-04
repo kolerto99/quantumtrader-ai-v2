@@ -1,5 +1,5 @@
 """
-QuantumTrader AI - Version 2.0
+QuantumTrader AI - Version 2.0 (English)
 Universal Multi-AI Trading Platform with Enhanced NexusLabs Design
 
 Features:
@@ -8,7 +8,7 @@ Features:
 - Individual user portfolios with virtual funds
 - AI-powered trading recommendations
 - Complete trade validation and security
-- Professional interface without emojis
+- Professional interface in English
 - Multi-AI provider support (OpenAI, Claude, Gemini, Local LLM)
 """
 
@@ -455,25 +455,25 @@ def validate_trade_input(symbol, quantity, price):
         
         # Validation checks
         if not symbol or symbol not in SYMBOLS:
-            return False, "Пожалуйста, выберите действительный символ акции"
+            return False, "Please select a valid stock symbol"
         
         if quantity <= 0:
-            return False, "Количество должно быть положительным числом"
+            return False, "Quantity must be a positive number"
         
         if quantity > MAX_QUANTITY_PER_TRADE:
-            return False, f"Максимальное количество за сделку: {MAX_QUANTITY_PER_TRADE:,} акций"
+            return False, f"Maximum quantity per trade: {MAX_QUANTITY_PER_TRADE:,} shares"
         
         if price <= 0:
-            return False, "Цена должна быть положительным числом"
+            return False, "Price must be a positive number"
         
         total_cost = quantity * price
         if total_cost > MAX_TRADE_VALUE:
-            return False, f"Максимальная сумма сделки: ${MAX_TRADE_VALUE:,}"
+            return False, f"Maximum trade value: ${MAX_TRADE_VALUE:,}"
         
-        return True, "Валидация пройдена"
+        return True, "Validation passed"
         
     except (ValueError, TypeError):
-        return False, "Пожалуйста, введите корректные числовые значения"
+        return False, "Please enter valid numeric values"
 
 def execute_trade(user_id, portfolio_type, action, symbol, quantity, price):
     """Execute a trade for user"""
@@ -488,12 +488,12 @@ def execute_trade(user_id, portfolio_type, action, symbol, quantity, price):
         # Get current portfolio
         portfolio = get_user_portfolio(user_id, portfolio_type)
         if not portfolio:
-            return False, "Портфель не найден"
+            return False, "Portfolio not found"
         
         if action.upper() == 'BUY':
             # Check sufficient funds
             if portfolio['cash'] < total_cost + MIN_CASH_RESERVE:
-                return False, f"Недостаточно средств. Доступно: ${portfolio['cash']:.2f}, Требуется: ${total_cost:.2f}"
+                return False, f"Insufficient funds. Available: ${portfolio['cash']:.2f}, Required: ${total_cost:.2f}"
             
             # Update cash
             new_cash = portfolio['cash'] - total_cost
@@ -535,7 +535,7 @@ def execute_trade(user_id, portfolio_type, action, symbol, quantity, price):
             cursor.execute('''
                 INSERT INTO trade_history (user_id, portfolio_type, trade_type, symbol, quantity, price, total_amount, notes)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            ''', (user_id, portfolio_type, 'BUY', symbol, quantity, price, total_cost, f"Покупка {quantity} акций {symbol} по ${price:.2f}"))
+            ''', (user_id, portfolio_type, 'BUY', symbol, quantity, price, total_cost, f"Bought {quantity} shares of {symbol} at ${price:.2f}"))
             
         elif action.upper() == 'SELL':
             # Check if position exists
@@ -547,12 +547,12 @@ def execute_trade(user_id, portfolio_type, action, symbol, quantity, price):
             existing_position = cursor.fetchone()
             
             if not existing_position:
-                return False, f"У вас нет позиции по {symbol}"
+                return False, f"You don't have a position in {symbol}"
             
             old_quantity, old_avg_price, old_total_cost = existing_position
             
             if quantity > old_quantity:
-                return False, f"Недостаточно акций. Доступно: {old_quantity}, Запрошено: {quantity}"
+                return False, f"Insufficient shares. Available: {old_quantity}, Requested: {quantity}"
             
             # Calculate P&L
             pnl = (price - old_avg_price) * quantity
@@ -587,14 +587,14 @@ def execute_trade(user_id, portfolio_type, action, symbol, quantity, price):
             cursor.execute('''
                 INSERT INTO trade_history (user_id, portfolio_type, trade_type, symbol, quantity, price, total_amount, pnl, notes)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ''', (user_id, portfolio_type, 'SELL', symbol, quantity, price, total_cost, pnl, f"Продажа {quantity} акций {symbol} по ${price:.2f}, P&L: ${pnl:.2f}"))
+            ''', (user_id, portfolio_type, 'SELL', symbol, quantity, price, total_cost, pnl, f"Sold {quantity} shares of {symbol} at ${price:.2f}, P&L: ${pnl:.2f}"))
         
         conn.commit()
-        return True, "Сделка выполнена успешно"
+        return True, "Trade executed successfully"
         
     except Exception as e:
         conn.rollback()
-        return False, f"Ошибка выполнения сделки: {str(e)}"
+        return False, f"Trade execution error: {str(e)}"
     finally:
         conn.close()
 
@@ -624,16 +624,16 @@ get_market_data()
 
 @app.route('/')
 def index():
-    """Main application page with enhanced NexusLabs design"""
+    """Main application page with enhanced NexusLabs design - English version"""
     user_id = get_user_id()
     
     return render_template_string("""
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuantumTrader AI v2.0 - NexusLabs Enhanced</title>
+    <title>QuantumTrader AI v2.0 - Enhanced NexusLabs Design</title>
     <style>
         * {
             margin: 0;
@@ -957,9 +957,447 @@ def index():
             font-size: 1.1em;
         }
         
-        /* Rest of the CSS remains the same as in the enhanced version */
-        /* ... (continuing with all the other styles) ... */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
         
+        .tab {
+            background: 
+                linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            letter-spacing: 1px;
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .tab:hover::before {
+            left: 100%;
+        }
+        
+        .tab.active {
+            background: linear-gradient(135deg, #00d4ff 0%, #ff0080 100%);
+            border-color: #00d4ff;
+            box-shadow: 
+                0 4px 20px rgba(0, 212, 255, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+        
+        .tab:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 6px 25px rgba(0, 212, 255, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .panel {
+            background: 
+                linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(20px);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #00d4ff, #ff0080, #00ff88);
+            opacity: 0.6;
+        }
+        
+        .panel h3 {
+            color: #00d4ff;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+            text-shadow: 0 0 15px rgba(0, 212, 255, 0.6);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.3);
+            padding-bottom: 10px;
+        }
+        
+        .portfolio-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: 
+                linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            backdrop-filter: blur(15px);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(0, 212, 255, 0.3);
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            color: #ffffff;
+            opacity: 0.8;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+        
+        .stat-value {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #00ff88;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.6);
+        }
+        
+        .trading-form {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .form-group label {
+            color: #00d4ff;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.6);
+        }
+        
+        .form-group select,
+        .form-group input {
+            background: 
+                linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            color: #ffffff;
+            font-size: 1em;
+            backdrop-filter: blur(15px);
+            transition: all 0.3s ease;
+        }
+        
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: #00d4ff;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .trade-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            padding: 18px 30px;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.1em;
+            font-weight: bold;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn-buy {
+            background: linear-gradient(135deg, #00ff88 0%, #00d4ff 100%);
+            color: #000000;
+            box-shadow: 0 4px 20px rgba(0, 255, 136, 0.4);
+        }
+        
+        .btn-buy:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0, 255, 136, 0.6);
+        }
+        
+        .btn-sell {
+            background: linear-gradient(135deg, #ff0080 0%, #ff6b6b 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 20px rgba(255, 0, 128, 0.4);
+        }
+        
+        .btn-sell:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(255, 0, 128, 0.6);
+        }
+        
+        .market-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .stock-card {
+            background: 
+                linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 25px;
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stock-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #00d4ff, #ff0080, #00ff88);
+            opacity: 0.6;
+        }
+        
+        .stock-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0, 212, 255, 0.3);
+            border-color: #00d4ff;
+        }
+        
+        .stock-symbol {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #00d4ff;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            text-shadow: 0 0 15px rgba(0, 212, 255, 0.6);
+        }
+        
+        .stock-price {
+            font-size: 2em;
+            font-weight: bold;
+            color: #ffffff;
+            margin-bottom: 8px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+        }
+        
+        .stock-change {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .stock-change.positive {
+            color: #00ff88;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.6);
+        }
+        
+        .stock-change.negative {
+            color: #ff6b6b;
+            text-shadow: 0 0 10px rgba(255, 107, 107, 0.6);
+        }
+        
+        .stock-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .positions-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .positions-table th,
+        .positions-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .positions-table th {
+            color: #00d4ff;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.6);
+        }
+        
+        .positions-table td {
+            color: #ffffff;
+        }
+        
+        .positions-table tr:hover {
+            background: rgba(0, 212, 255, 0.1);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+        }
+        
+        .modal-content {
+            background: 
+                linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
+            margin: 10% auto;
+            padding: 40px;
+            border: 2px solid rgba(0, 212, 255, 0.5);
+            border-radius: 25px;
+            width: 90%;
+            max-width: 500px;
+            backdrop-filter: blur(25px);
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #00d4ff, #ff0080, #00ff88);
+        }
+        
+        .close {
+            color: #ffffff;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .close:hover {
+            color: #ff0080;
+            text-shadow: 0 0 15px rgba(255, 0, 128, 0.8);
+        }
+        
+        .modal h2 {
+            color: #00d4ff;
+            margin-bottom: 20px;
+            text-align: center;
+            letter-spacing: 2px;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.6);
+        }
+        
+        .modal-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2.5em;
+            }
+            
+            .market-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .tab {
+                width: 200px;
+                text-align: center;
+            }
+        }
     </style>
 </head>
 <body>
@@ -986,17 +1424,225 @@ def index():
         </div>
         
         <div class="simulation-notice">
-            ТОРГОВАЯ СИМУЛЯЦИЯ
+            TRADING SIMULATION
             <br>
-            Используются виртуальные средства и реальные рыночные данные для безопасного обучения торговле
+            Using virtual funds and real market data for safe trading education
         </div>
         
-        <!-- Rest of the HTML content remains the same -->
-        <!-- ... -->
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('trading')">Trading</div>
+            <div class="tab" onclick="showTab('ai-bot')">AI Bot</div>
+            <div class="tab" onclick="showTab('history')">Trade History</div>
+            <div class="tab" onclick="showTab('analytics')">Analytics</div>
+        </div>
         
+        <div id="trading" class="tab-content active">
+            <div class="content">
+                <div class="panel">
+                    <h3>HUMAN PORTFOLIO</h3>
+                    <div class="portfolio-stats">
+                        <div class="stat-card">
+                            <div class="stat-label">Total Value</div>
+                            <div class="stat-value" id="humanTotalValue">$100,000</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Cash</div>
+                            <div class="stat-value" id="humanCash">$100,000</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">P&L</div>
+                            <div class="stat-value" id="humanPnL">+$0</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Positions</div>
+                            <div class="stat-value" id="humanPositions">0</div>
+                        </div>
+                    </div>
+                    
+                    <h4 style="color: #00d4ff; margin: 20px 0 10px 0;">Open Positions</h4>
+                    <div id="positionsContainer">
+                        <p style="text-align: center; color: rgba(255,255,255,0.6); padding: 20px;">No open positions</p>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <h3>MANUAL TRADING</h3>
+                    <div class="trading-form">
+                        <div class="form-group">
+                            <label>Symbol</label>
+                            <select id="symbolSelect">
+                                <option value="">Select Stock</option>
+                                <option value="AAPL">AAPL</option>
+                                <option value="GOOGL">GOOGL</option>
+                                <option value="MSFT">MSFT</option>
+                                <option value="AMZN">AMZN</option>
+                                <option value="TSLA">TSLA</option>
+                                <option value="NVDA">NVDA</option>
+                                <option value="META">META</option>
+                                <option value="NFLX">NFLX</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Quantity</label>
+                            <input type="number" id="quantityInput" placeholder="Enter quantity" min="1" max="10000">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Price</label>
+                            <input type="number" id="priceInput" placeholder="Current price" step="0.01" min="0.01">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Total Amount</label>
+                            <input type="text" id="totalAmount" placeholder="$0.00" readonly>
+                        </div>
+                        
+                        <div class="trade-buttons">
+                            <button class="btn btn-buy" onclick="executeTrade('BUY')">BUY</button>
+                            <button class="btn btn-sell" onclick="executeTrade('SELL')">SELL</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <h3>LIVE MARKET DATA</h3>
+                <div class="market-grid" id="marketGrid">
+                    <!-- Market data will be populated here -->
+                </div>
+            </div>
+        </div>
+        
+        <div id="ai-bot" class="tab-content">
+            <div class="content">
+                <div class="panel">
+                    <h3>AI PORTFOLIO</h3>
+                    <div class="portfolio-stats">
+                        <div class="stat-card">
+                            <div class="stat-label">Total Value</div>
+                            <div class="stat-value" id="aiTotalValue">$50,000</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Cash</div>
+                            <div class="stat-value" id="aiCash">$50,000</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">P&L</div>
+                            <div class="stat-value" id="aiPnL">+$0</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Status</div>
+                            <div class="stat-value" id="aiStatus">Disabled</div>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center; margin: 20px 0;">
+                        <button class="btn btn-buy" onclick="toggleAI()" id="aiToggleBtn">Enable AI Bot</button>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <h3>AI CONFIGURATION</h3>
+                    <div class="trading-form">
+                        <div class="form-group">
+                            <label>AI Provider</label>
+                            <select id="aiProvider">
+                                <option value="openai">OpenAI GPT</option>
+                                <option value="claude">Anthropic Claude</option>
+                                <option value="gemini">Google Gemini</option>
+                                <option value="local">Local LLM</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Trading Strategy</label>
+                            <select id="aiStrategy">
+                                <option value="conservative">Conservative</option>
+                                <option value="balanced">Balanced</option>
+                                <option value="aggressive">Aggressive</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Risk Level</label>
+                            <select id="riskLevel">
+                                <option value="low">Low Risk</option>
+                                <option value="medium">Medium Risk</option>
+                                <option value="high">High Risk</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="history" class="tab-content">
+            <div class="panel">
+                <h3>TRADE HISTORY</h3>
+                <div id="tradeHistoryContainer">
+                    <p style="text-align: center; color: rgba(255,255,255,0.6); padding: 20px;">No trades yet</p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="analytics" class="tab-content">
+            <div class="content">
+                <div class="panel">
+                    <h3>PERFORMANCE ANALYTICS</h3>
+                    <div class="portfolio-stats">
+                        <div class="stat-card">
+                            <div class="stat-label">Total Trades</div>
+                            <div class="stat-value" id="totalTrades">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Win Rate</div>
+                            <div class="stat-value" id="winRate">0%</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Total Volume</div>
+                            <div class="stat-value" id="totalVolume">$0</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Realized P&L</div>
+                            <div class="stat-value" id="realizedPnL">$0</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <h3>TRADING INSIGHTS</h3>
+                    <div id="tradingInsights">
+                        <p style="color: rgba(255,255,255,0.8); line-height: 1.6;">
+                            Start trading to see detailed analytics and insights about your performance.
+                            The system will track your win rate, average trade size, and provide 
+                            recommendations for improving your trading strategy.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Trade Confirmation Modal -->
+    <div id="tradeModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Confirm Trade</h2>
+            <div id="tradeDetails"></div>
+            <div class="modal-buttons">
+                <button class="btn btn-buy" onclick="confirmTrade()">Confirm</button>
+                <button class="btn btn-sell" onclick="closeModal()">Cancel</button>
+            </div>
+        </div>
     </div>
     
     <script>
+        // Global variables
+        let currentMarketData = {};
+        let currentUser = null;
+        let pendingTrade = null;
+        
         // Enhanced particle creation
         function createParticles() {
             const particles = document.getElementById('particles');
@@ -1013,18 +1659,397 @@ def index():
             }
         }
         
-        // Initialize particles
-        createParticles();
+        // Tab management
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+            
+            // Load data for specific tabs
+            if (tabName === 'history') {
+                loadTradeHistory();
+            } else if (tabName === 'analytics') {
+                loadAnalytics();
+            }
+        }
         
-        // Rest of the JavaScript remains the same
-        // ... (all the trading functionality)
+        // Market data functions
+        async function loadMarketData() {
+            try {
+                const response = await fetch('/api/market_data');
+                const data = await response.json();
+                currentMarketData = data;
+                updateMarketDisplay();
+                updateLastUpdate();
+            } catch (error) {
+                console.error('Error loading market data:', error);
+            }
+        }
         
+        function updateMarketDisplay() {
+            const marketGrid = document.getElementById('marketGrid');
+            marketGrid.innerHTML = '';
+            
+            Object.values(currentMarketData).forEach(stock => {
+                const changeClass = stock.change >= 0 ? 'positive' : 'negative';
+                const changeSign = stock.change >= 0 ? '+' : '';
+                
+                const stockCard = document.createElement('div');
+                stockCard.className = 'stock-card';
+                stockCard.innerHTML = `
+                    <div class="stock-symbol">${stock.symbol}</div>
+                    <div class="stock-price">$${stock.price.toFixed(2)}</div>
+                    <div class="stock-change ${changeClass}">${changeSign}${stock.change.toFixed(2)}%</div>
+                    <div class="stock-details">
+                        <div>Vol: ${(stock.volume / 1000000).toFixed(1)}M</div>
+                        <div>RSI: ${stock.rsi.toFixed(1)}</div>
+                    </div>
+                `;
+                
+                stockCard.onclick = () => selectStock(stock.symbol, stock.price);
+                marketGrid.appendChild(stockCard);
+            });
+        }
+        
+        function selectStock(symbol, price) {
+            document.getElementById('symbolSelect').value = symbol;
+            document.getElementById('priceInput').value = price.toFixed(2);
+            calculateTotal();
+        }
+        
+        function updateLastUpdate() {
+            const now = new Date();
+            document.getElementById('lastUpdate').textContent = now.toLocaleTimeString();
+        }
+        
+        // Portfolio functions
+        async function loadPortfolio(type = 'human') {
+            try {
+                const response = await fetch(`/api/portfolio/${type}`);
+                const data = await response.json();
+                
+                if (type === 'human') {
+                    document.getElementById('humanTotalValue').textContent = `$${data.total_value.toLocaleString()}`;
+                    document.getElementById('humanCash').textContent = `$${data.cash.toLocaleString()}`;
+                    document.getElementById('humanPnL').textContent = `${data.pnl >= 0 ? '+' : ''}$${data.pnl.toLocaleString()}`;
+                    document.getElementById('humanPositions').textContent = Object.keys(data.positions).length;
+                    
+                    updatePositionsDisplay(data.positions);
+                } else {
+                    document.getElementById('aiTotalValue').textContent = `$${data.total_value.toLocaleString()}`;
+                    document.getElementById('aiCash').textContent = `$${data.cash.toLocaleString()}`;
+                    document.getElementById('aiPnL').textContent = `${data.pnl >= 0 ? '+' : ''}$${data.pnl.toLocaleString()}`;
+                    document.getElementById('aiStatus').textContent = data.enabled ? 'Active' : 'Disabled';
+                    
+                    const toggleBtn = document.getElementById('aiToggleBtn');
+                    toggleBtn.textContent = data.enabled ? 'Disable AI Bot' : 'Enable AI Bot';
+                    toggleBtn.className = data.enabled ? 'btn btn-sell' : 'btn btn-buy';
+                }
+            } catch (error) {
+                console.error(`Error loading ${type} portfolio:`, error);
+            }
+        }
+        
+        function updatePositionsDisplay(positions) {
+            const container = document.getElementById('positionsContainer');
+            
+            if (Object.keys(positions).length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: rgba(255,255,255,0.6); padding: 20px;">No open positions</p>';
+                return;
+            }
+            
+            let html = `
+                <table class="positions-table">
+                    <thead>
+                        <tr>
+                            <th>Symbol</th>
+                            <th>Qty</th>
+                            <th>Avg Price</th>
+                            <th>Current</th>
+                            <th>P&L</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            Object.entries(positions).forEach(([symbol, position]) => {
+                const currentPrice = currentMarketData[symbol]?.price || position.avg_price;
+                const pnl = (currentPrice - position.avg_price) * position.quantity;
+                const pnlClass = pnl >= 0 ? 'positive' : 'negative';
+                
+                html += `
+                    <tr>
+                        <td>${symbol}</td>
+                        <td>${position.quantity}</td>
+                        <td>$${position.avg_price.toFixed(2)}</td>
+                        <td>$${currentPrice.toFixed(2)}</td>
+                        <td class="${pnlClass}">${pnl >= 0 ? '+' : ''}$${pnl.toFixed(2)}</td>
+                        <td><button class="btn btn-sell" style="padding: 8px 16px; font-size: 0.9em;" onclick="sellPosition('${symbol}', ${position.quantity}, ${currentPrice})">Sell</button></td>
+                    </tr>
+                `;
+            });
+            
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+        
+        // Trading functions
+        function calculateTotal() {
+            const quantity = parseFloat(document.getElementById('quantityInput').value) || 0;
+            const price = parseFloat(document.getElementById('priceInput').value) || 0;
+            const total = quantity * price;
+            
+            document.getElementById('totalAmount').value = total > 0 ? `$${total.toFixed(2)}` : '$0.00';
+        }
+        
+        async function executeTrade(action) {
+            const symbol = document.getElementById('symbolSelect').value;
+            const quantity = document.getElementById('quantityInput').value;
+            const price = document.getElementById('priceInput').value;
+            
+            if (!symbol || !quantity || !price) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            // Validate trade
+            try {
+                const validateResponse = await fetch('/api/validate_trade', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ symbol, quantity, price, action })
+                });
+                
+                const validation = await validateResponse.json();
+                
+                if (!validation.valid) {
+                    alert(validation.error);
+                    return;
+                }
+                
+                // Show confirmation modal
+                showTradeModal(action, symbol, quantity, price);
+                
+            } catch (error) {
+                console.error('Error validating trade:', error);
+                alert('Error validating trade');
+            }
+        }
+        
+        function showTradeModal(action, symbol, quantity, price) {
+            const total = parseFloat(quantity) * parseFloat(price);
+            
+            pendingTrade = { action, symbol, quantity, price };
+            
+            document.getElementById('tradeDetails').innerHTML = `
+                <div style="text-align: center; margin: 20px 0;">
+                    <h3 style="color: ${action === 'BUY' ? '#00ff88' : '#ff0080'};">${action} ORDER</h3>
+                    <p style="margin: 10px 0;"><strong>Symbol:</strong> ${symbol}</p>
+                    <p style="margin: 10px 0;"><strong>Quantity:</strong> ${quantity} shares</p>
+                    <p style="margin: 10px 0;"><strong>Price:</strong> $${parseFloat(price).toFixed(2)}</p>
+                    <p style="margin: 10px 0;"><strong>Total:</strong> $${total.toFixed(2)}</p>
+                </div>
+            `;
+            
+            document.getElementById('tradeModal').style.display = 'block';
+        }
+        
+        async function confirmTrade() {
+            if (!pendingTrade) return;
+            
+            try {
+                const response = await fetch('/api/execute_trade', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        portfolio_type: 'human',
+                        ...pendingTrade
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('Trade executed successfully!');
+                    closeModal();
+                    clearForm();
+                    loadPortfolio('human');
+                } else {
+                    alert(result.error);
+                }
+                
+            } catch (error) {
+                console.error('Error executing trade:', error);
+                alert('Error executing trade');
+            }
+        }
+        
+        function sellPosition(symbol, quantity, price) {
+            showTradeModal('SELL', symbol, quantity, price);
+        }
+        
+        function closeModal() {
+            document.getElementById('tradeModal').style.display = 'none';
+            pendingTrade = null;
+        }
+        
+        function clearForm() {
+            document.getElementById('symbolSelect').value = '';
+            document.getElementById('quantityInput').value = '';
+            document.getElementById('priceInput').value = '';
+            document.getElementById('totalAmount').value = '$0.00';
+        }
+        
+        // AI Bot functions
+        async function toggleAI() {
+            try {
+                const response = await fetch('/api/ai/toggle', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({})
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert(result.message);
+                    loadPortfolio('ai');
+                } else {
+                    alert(result.error);
+                }
+                
+            } catch (error) {
+                console.error('Error toggling AI:', error);
+                alert('Error toggling AI bot');
+            }
+        }
+        
+        // Trade history functions
+        async function loadTradeHistory() {
+            try {
+                const response = await fetch('/api/trade_history');
+                const trades = await response.json();
+                
+                const container = document.getElementById('tradeHistoryContainer');
+                
+                if (trades.length === 0) {
+                    container.innerHTML = '<p style="text-align: center; color: rgba(255,255,255,0.6); padding: 20px;">No trades yet</p>';
+                    return;
+                }
+                
+                let html = `
+                    <table class="positions-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Symbol</th>
+                                <th>Qty</th>
+                                <th>Price</th>
+                                <th>Total</th>
+                                <th>P&L</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+                
+                trades.forEach(trade => {
+                    const date = new Date(trade.timestamp).toLocaleDateString();
+                    const pnlClass = trade.pnl >= 0 ? 'positive' : 'negative';
+                    
+                    html += `
+                        <tr>
+                            <td>${date}</td>
+                            <td style="color: ${trade.trade_type === 'BUY' ? '#00ff88' : '#ff0080'};">${trade.trade_type}</td>
+                            <td>${trade.symbol}</td>
+                            <td>${trade.quantity}</td>
+                            <td>$${trade.price.toFixed(2)}</td>
+                            <td>$${trade.total_amount.toFixed(2)}</td>
+                            <td class="${pnlClass}">${trade.pnl ? (trade.pnl >= 0 ? '+' : '') + '$' + trade.pnl.toFixed(2) : '-'}</td>
+                        </tr>
+                    `;
+                });
+                
+                html += '</tbody></table>';
+                container.innerHTML = html;
+                
+            } catch (error) {
+                console.error('Error loading trade history:', error);
+            }
+        }
+        
+        // Analytics functions
+        async function loadAnalytics() {
+            try {
+                const response = await fetch('/api/analytics');
+                const analytics = await response.json();
+                
+                document.getElementById('totalTrades').textContent = analytics.total_trades;
+                document.getElementById('winRate').textContent = analytics.win_rate.toFixed(1) + '%';
+                document.getElementById('totalVolume').textContent = '$' + analytics.total_volume.toLocaleString();
+                document.getElementById('realizedPnL').textContent = (analytics.realized_pnl >= 0 ? '+' : '') + '$' + analytics.realized_pnl.toLocaleString();
+                
+            } catch (error) {
+                console.error('Error loading analytics:', error);
+            }
+        }
+        
+        // Event listeners
+        document.getElementById('quantityInput').addEventListener('input', calculateTotal);
+        document.getElementById('priceInput').addEventListener('input', calculateTotal);
+        
+        document.getElementById('symbolSelect').addEventListener('change', function() {
+            const symbol = this.value;
+            if (symbol && currentMarketData[symbol]) {
+                document.getElementById('priceInput').value = currentMarketData[symbol].price.toFixed(2);
+                calculateTotal();
+            }
+        });
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('tradeModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+        
+        // Initialize application
+        function init() {
+            createParticles();
+            loadMarketData();
+            loadPortfolio('human');
+            loadPortfolio('ai');
+            
+            // Update market data every 60 seconds
+            setInterval(loadMarketData, 60000);
+            
+            // Update portfolios every 30 seconds
+            setInterval(() => {
+                loadPortfolio('human');
+                loadPortfolio('ai');
+            }, 30000);
+        }
+        
+        // Start the application
+        init();
     </script>
 </body>
 </html>
     """)
 
-# API Routes
+# API Routes (same as before but with English error messages)
 @app.route('/api/market_data')
 def api_market_data():
     """Get current market data"""
@@ -1120,7 +2145,7 @@ def validate_trade():
         if data.get('action') == 'BUY' and portfolio['cash'] < total_cost + MIN_CASH_RESERVE:
             return jsonify({
                 'valid': False,
-                'error': f'Недостаточно средств. Доступно: ${portfolio["cash"]:.2f}, Требуется: ${total_cost:.2f}'
+                'error': f'Insufficient funds. Available: ${portfolio["cash"]:.2f}, Required: ${total_cost:.2f}'
             })
     
     return jsonify({
@@ -1206,16 +2231,16 @@ def api_ai_toggle():
         cursor.execute('UPDATE ai_portfolios SET enabled = ? WHERE user_id = ?', (new_status, user_id))
         conn.commit()
         
-        message = 'AI Bot включен' if new_status else 'AI Bot выключен'
+        message = 'AI Bot enabled' if new_status else 'AI Bot disabled'
         
         conn.close()
         return jsonify({'success': True, 'message': message, 'enabled': new_status})
     
     conn.close()
-    return jsonify({'success': False, 'error': 'AI портфель не найден'})
+    return jsonify({'success': False, 'error': 'AI portfolio not found'})
 
 if __name__ == '__main__':
-    print("Starting QuantumTrader AI v2.0 - Enhanced NexusLabs Design...")
+    print("Starting QuantumTrader AI v2.0 - Enhanced NexusLabs Design (English Version)...")
     print("Features:")
     print("- Enhanced cosmic design with vibrant colors and animations")
     print("- Multiple particle layers and visual effects")
@@ -1223,7 +2248,7 @@ if __name__ == '__main__':
     print("- AI Portfolio with $50,000 for each user")
     print("- REAL-TIME market data via Yahoo Finance API")
     print("- Complete trade validation and security")
-    print("- Professional interface without emojis")
+    print("- Professional English interface")
     print("- Trade history and analytics")
     print("- Multi-AI provider support")
     
